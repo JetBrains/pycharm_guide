@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="player"></div>
+
+<script>
+    var tag = document.createElement('script');
+    tag.src = "http://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            playerVars: {
+                modestbranding: 1,
+                playsinline: 1,
+                disablekb: 1,
+                autoplay: 0,
+                controls: 0,
+                rel: 0,
+                fs: 0,
+                playlist: "PLQ176FUIyIUaXlyMXddbZ7TOdW2Yns4yV",
+            },
+            height: '390',
+            width: '640',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            },
+        });
+    }
+
+    var videos = [
+        {
+            vid: 'GumVwef1LhQ',
+            startSeconds: 280,
+            endSeconds: 285
+        }/*,
+        {
+            vid: 'GumVwef1LhQ',
+            startSeconds: 1280,
+            endSeconds: 1285
+        }*/
+    ];
+    var index = 0;
+    function onPlayerReady(event) {
+        event.target.cueVideoById({
+            videoId: videos[index].vid,
+            startSeconds: videos[index].startSeconds,
+            endSeconds: videos[index].endSeconds
+        });
+        event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED &&
+            player.getVideoLoadedFraction() > 0) {
+            if (index < videos.length - 1) {
+                index++;
+                event.target.loadVideoById({
+                    videoId: videos[index].vid,
+                    startSeconds: videos[index].startSeconds,
+                    endSeconds: videos[index].endSeconds
+                });
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
